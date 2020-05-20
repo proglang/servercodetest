@@ -1,0 +1,12 @@
+<fieldset id="{{id}}" class="module aligned">
+    <h2>{{ name }}</h2>
+    {% for field in form %}
+        <div class="form-row">
+            {{ field.errors }}
+            {{ field.label_tag }} {{ field }}
+            {% if field.help_text %}
+            <p class="help">{{ field.help_text|safe }}</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+</fieldset>

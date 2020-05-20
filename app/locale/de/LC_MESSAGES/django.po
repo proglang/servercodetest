@@ -1,0 +1,183 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-02-10 06:43+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\admin.py:36 .\admin.py:269
+msgid "title.name"
+msgstr "Name"
+
+#: .\admin.py:37
+msgid "title.version"
+msgstr "Version"
+
+#: .\admin.py:38 .\admin.py:271
+msgid "title.state"
+msgstr "Status"
+
+#: .\admin.py:39
+msgid "title.active"
+msgstr "Aktiv"
+
+#: .\admin.py:40 .\admin.py:274
+msgid "title.actions"
+msgstr "Aktionen"
+
+#: .\admin.py:64
+msgid "action.load"
+msgstr "Laden"
+
+#: .\admin.py:66
+msgid "action.reload"
+msgstr "Laden"
+
+#: .\admin.py:68
+msgid "action.disable"
+msgstr "Deaktivieren"
+
+#: .\admin.py:70
+msgid "action.enable"
+msgstr "Aktivieren"
+
+#: .\admin.py:91
+msgid "plugin.message.load"
+msgstr "{} geladen"
+
+#: .\admin.py:92
+msgid "plugin.message.reload"
+msgstr "{} geladen"
+
+#: .\admin.py:93
+msgid "plugin.message.disable"
+msgstr "{} deaktiviert"
+
+#: .\admin.py:94
+msgid "plugin.message.enable"
+msgstr "{} aktiviert"
+
+#: .\admin.py:97
+msgid "plugin.error.load"
+msgstr "Fehler beim Laden von {}"
+
+#: .\admin.py:98
+msgid "plugin.error.reload"
+msgstr "Fehler beim Laden von {}"
+
+#: .\admin.py:99
+msgid "plugin.error.disable"
+msgstr "Fehler beim Deaktivieren von {}"
+
+#: .\admin.py:100
+msgid "plugin.error.enable"
+msgstr "Fehler beim Aktivieren von {}"
+
+#: .\admin.py:187
+msgid "general"
+msgstr "Allgemein"
+
+#: .\admin.py:188
+msgid "readonly"
+msgstr "ReadOnly"
+
+#: .\admin.py:222
+msgid "plugin.settings"
+msgstr "Einstellungen"
+
+#: .\admin.py:257
+msgid "docker.message.delete"
+msgstr "{} gelöscht"
+
+#: .\admin.py:258
+msgid "docker.message.start"
+msgstr "{} gestarted"
+
+#: .\admin.py:259
+msgid "docker.message.stop"
+msgstr "{} gestoppt"
+
+#: .\admin.py:262
+msgid "docker.error.delete"
+msgstr "Fehler beim Löschen von {}"
+
+#: .\admin.py:263
+msgid "docker.error.start"
+msgstr "Fehler beim Starten von {}"
+
+#: .\admin.py:264
+msgid "docker.error.stop"
+msgstr "Fehler beim Stoppen von {}"
+
+#: .\admin.py:270
+msgid "title.docker.image"
+msgstr "Image"
+
+#: .\admin.py:272
+msgid "title.docker.container"
+msgstr "Container"
+
+#: .\admin.py:273
+msgid "title.date"
+msgstr "Datum"
+
+#: .\admin.py:298
+msgid "action.start"
+msgstr "Starten"
+
+#: .\admin.py:299
+msgid "action.stop"
+msgstr "Stoppen"
+
+#: .\admin.py:300
+msgid "action.delete"
+msgstr "Löschen"
+
+#: .\models.py:13
+msgid "plugin"
+msgstr "Plugin"
+
+#: .\models.py:14
+msgid "plugins"
+msgstr "Plugins"
+
+#: .\models.py:60
+msgid "setting"
+msgstr "Einstellung"
+
+#: .\models.py:61
+msgid "settings"
+msgstr "Einstellungen"
+
+#: .\models.py:63
+msgid "plugin.name"
+msgstr "Name"
+
+#: .\models.py:66
+msgid "setting.name"
+msgstr "Name"
+
+#: .\models.py:68 .\models.py:85
+msgid "date"
+msgstr "Datum"
+
+#: .\models.py:72
+msgid "setting.token"
+msgstr "Token"
+
+#: .\models.py:83
+msgid "lock.name"
+msgstr ""

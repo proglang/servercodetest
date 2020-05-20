@@ -1,2 +1,4 @@
-# servercodetest
-Framework for running code questions on a server
+# ServerTest
+
+local Test:
+- execute in src: python manage.py runserver --settings servercodetest.settings_dev

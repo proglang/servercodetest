@@ -1,0 +1,41 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+<!-- https://stackoverflow.com/questions/21469470/how-can-i-change-django-admin-language -->
+<!-- https://stackoverflow.com/questions/2053258/how-do-i-output-html-in-a-message-in-the-new-django-messages-framework -->
+
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript">
+    SCT_ADMIN_URL = "{% url 'admin:index' %}";
+</script>
+{% endblock %}
+
+{% block messages %}
+    {% if messages %}
+    <ul class="messagelist">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">
+                {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endblock messages %}
+
+{% block userlinks %}
+{{ block.super }}
+/ <form action="{% url 'set_language' %}" method="post" style="display:inline">{% csrf_token %}
+    <input name="next" type="hidden" value="{{ redirect_to }}">
+    <select name="language" onchange="this.form.submit()">
+        {% get_current_language as LANGUAGE_CODE %}
+        {% get_available_languages as LANGUAGES %}
+        {% get_language_info_list for LANGUAGES as languages %}
+        {% for language in languages %}
+            <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                {{ language.name_local }} ({{ language.code }})
+            </option>
+        {% endfor %}
+    </select>
+</form>
+{% endblock %}

@@ -1,0 +1,51 @@
+version: "3"
+services:
+  web:
+    build: .
+    ports:
+      - "8000:80"
+    volumes:
+      - ./plugins:/usr/src/app/plugins
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./image/migrations:/usr/src/app/app/migrations
+    networks:
+      - sct_network
+      - sct_db_network
+    environment:
+      - SCT_DEBUG=1
+      - SCT_LOG_LEVEL=DEBUG
+
+      #- SCT_BASE_URL_PATH=test
+
+      - SCT_DATABASE_NAME=servercodetest
+      - SCT_DATABASE_HOST=db
+      - SCT_DATABASE_PORT=3306
+      - SCT_DATABASE_USER=root
+      - SCT_DATABASE_PASSWORD=example
+
+      - SCT_DOCKER=1
+      #TODO: update code to allow network name without container
+      - SCT_DOCKER_NETWORK=servercodetest_sct_network
+      - SCT_DOCKER_PREFIX=sct
+      - GU_SUPERUSER=root
+      - GU_SUPERUSER_PASSWORD=test
+      - GU_PROCESSES=2
+      - GU_THREADS=2
+      - GU_USER_ID=0
+
+  db:
+    image: mysql:5.7
+    volumes:
+      - ./image/data/safe/mysql:/var/lib/mysql
+    command: |
+      --character-set-server=utf8
+      --collation-server=utf8_general_ci
+    networks:
+      - sct_db_network
+    environment:
+      - MYSQL_ROOT_PASSWORD=example
+      - MYSQL_DATABASE=servercodetest
+
+networks:
+    sct_network:
+    sct_db_network:
