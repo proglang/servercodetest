@@ -19,8 +19,8 @@ class Response:
 
     def serialize(self):
         res = {}
-        if isinstance(self.points, (int, float)) and self.points > 0:
-            res["points"] = self.points
+        if isinstance(self.points, (int, float)):
+            res["points"] = max(0, self.points)
         if isinstance(self.text, str):
             res["text"] = self.text
         if isinstance(self.error, str):
