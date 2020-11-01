@@ -6,6 +6,17 @@
 see ServerCodeTest docu.
 
 ## Code grading
+### Decorators
+* `test(points:Union[int,float]=0, description:str="")`
+  * registers the following function as a test function.
+  * injects the *given function* as first argument
+* `check_args(points:Union[int,float]=0, description:str="")`
+  * registers the following function as an argument check function.
+  * will be called for each call to the *given function* and injects the arguments of the calls.
+
+*given function*: function set with `set_function(name:str)`
+
+### Example
 **Student Code:**
 ```python
 def sort(lst: list):
