@@ -38,7 +38,7 @@ class Main:
         return util.Popen(*args, env=self._get_env(), cwd=self.dir)
 
     def run_code(self):
-        popen = self._popen("python3.8", "./sct_user.py")
+        popen = self._popen("python3", "./sct_user.py")
         return Text(popen.error, popen.data)
 
     def run_pytest(self):
@@ -46,7 +46,7 @@ class Main:
         return Text(popen.error, popen.data)
 
     def run_mark(self):
-        popen = self._popen("python3.8", "./sct_exec_mark.py")
+        popen = self._popen("python3", "./sct_exec_mark.py")
         (text, data) = self._parse(popen.data)
         ret = Mark(popen.error, text)
         for (_, value) in data.items():
