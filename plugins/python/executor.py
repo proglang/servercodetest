@@ -82,8 +82,10 @@ class Executor(BaseExecutor):
             if is_dbg:
                 if (text := mark["text"]) != "":
                     _mark += f"{text}\n"
+                    _add = True
                 if (err := mark["error"]) != "":
                     _mark += f"{format.red(err)}\n"
+                    _add = True
             for key in ("success", "missed"):
                 if key in ("missed",) and not is_dbg:
                     continue
