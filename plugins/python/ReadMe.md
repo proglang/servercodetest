@@ -1,0 +1,44 @@
+# Python 3 Plugin for ServerCodeTest
+## Requirements
+* docker
+
+## Response
+see ServerCodeTest docu.
+
+## Code grading
+**Student Code:**
+```python
+def sort(lst: list):
+    return sorted(lst)
+    
+def test_1():
+  assert sort([]) == []
+
+def test_2():
+  assert sort([2,1]) == [1,2]
+```
+unittests need to be prefixed with `test_`
+
+**Grading code**
+```python
+set_function("sort") 
+
+@test(points=1, description="Test 1")
+def test_1(fn):
+  assert [] == fn([])
+
+@test(points=1, description="Test 2")
+def test_2(fn):
+  assert [] == user.sort([])
+
+@check_args(points=1, description="CA 1")
+def ca_1(lst:list, *args, **args):
+  assert lst==[]
+
+@check_args(points=1, description="CA 2")
+def ca_2(lst:list, *args, **args):
+  assert len(lst) == 1
+```
+As seen above, the student code will be implicitly imported as module `user`.
+
+If `check_args` is used a function needs to be set with `set_function`.
