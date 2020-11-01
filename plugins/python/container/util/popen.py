@@ -29,11 +29,10 @@ class Popen:
                 cwd=self._cwd,
             )
             (out, err) = p.communicate(timeout=self._timeout)
-            code = p.wait(timeout=1)
             self.isTimeout = False
 
             self.data = out
-            self.code = code
+            self.code = p.returncode
             self.error = err
         except _TimeoutExpired as e:
             self.isTimeout = True
