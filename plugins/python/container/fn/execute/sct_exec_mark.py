@@ -25,7 +25,6 @@ try:
     data["test"] = sct_test.Test.serialize()
     data["args"] = sct_test.CheckArgs.serialize()
     print(json.dumps(data))
-    #raise ValueError("xx")
 except:
     raise
 finally:

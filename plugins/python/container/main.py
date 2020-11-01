@@ -186,5 +186,3 @@ class Main:
 
 if __name__ == "__main__":
     Main()
-    # signal.signal(signal.SIGTERM, s.kill)
-    # s.run()

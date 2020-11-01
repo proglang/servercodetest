@@ -106,5 +106,4 @@ class Plugin:
 
             _radon = run_radon(_dir, self.settings)
             _exec = run_execute(_dir, self.settings)
-            #return _exec
         return {"radon": _radon, "exec": _exec, "version": self.version}
