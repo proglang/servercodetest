@@ -11,10 +11,10 @@ from util.sct_sandbox import filter_source
 
 class GlobalSettings:
     class Exec:
-        def __init__(self, data={}):
+        def __init__(self, data:dict={}):
             self.reset(data)
 
-        def reset(self, data):
+        def reset(self, data:dict):
             if not isinstance(data, (dict,)):
                 data = {}
             self.run: bool = data.get("run", False) == True
@@ -22,7 +22,7 @@ class GlobalSettings:
             self.pytest: bool = data.get("pytest", False) == True
 
     class Sandbox:
-        def __init__(self, data={}):
+        def __init__(self, data:dict={}):
             self.imports = []
             self.reset(data)
 
@@ -91,7 +91,7 @@ class Plugin:
                 except:
                     pass
 
-    def _write_files(self, _dir, data):
+    def _write_files(self, _dir:str, data:dict):
         code = filter_source(data["code"], "def test_dummy():\n assert True")
         test = filter_source(data["test"], "from sct_test import test, check_args, set_function")
         with open(os.path.join(_dir, "sct_user.py"), "w") as file:
@@ -99,7 +99,7 @@ class Plugin:
         with open(os.path.join(_dir, "sct_compare.py"), "w") as file:
             file.write(test)
 
-    def exec(self, data) -> dict:
+    def exec(self, data:dict) -> dict:
         with tempfile.TemporaryDirectory(prefix="tmp_", dir=os.getcwd()) as _dir:
             self._add_links(_dir)
             self._write_files(_dir, data)
