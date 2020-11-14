@@ -46,8 +46,7 @@ def Process(data):
         data, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
     )
     (output, err) = process.communicate()
-    exit_code = process.wait()
-    return (exit_code, output, err)
+    return (process.returncode, output, err)
 
 
 def CreateStatic():

@@ -1,15 +1,55 @@
+"""This file defines functions and decorators to mark code.
+Functions:
+- set_function(name)
+Decorators:
+- test
+- check_args
+"""
+
 import itertools
 
-
-def set_function(name):
+def set_function(name:str):
     Hook.init(name)
 
 
-def test(points=0, description=""):
+def test(points:int=0, description:str=""):
+    """
+Add Testfunction:
+- points: number of points if test is successful
+- description: Description of the test
+- injects function as first argument if a function was set with set function
+
+Example:
+@test(points=1, description="test 1")
+def test_1(fn):
+    assert False
+
+@test(points=2, description="test 2")
+def test_2(fn):
+    assert True
+"""
     return Test.decorator(description, points)
 
 
-def check_args(points=0, description=""):
+def check_args(points:int=0, description:str=""):
+    """
+Checks if a function was called with specific arguments:
+- set_function needs to be called to use this decorator
+- points: number of points if test is successful
+- description: Description of the test
+- injects the arguments of all calls to the specified function as arguments
+
+Example:
+set_function("name")
+
+@check_args(points=1, description="test 1")
+def test_1(arg1, arg2, *args, **kwargs):
+    assert False
+
+@check_args(points=2, description="test 2")
+def test_2(arg1, arg2, *args, **kwargs):
+    assert True
+"""
     return CheckArgs.decorator(description, points)
 
 
@@ -17,7 +57,7 @@ class Hook:
     name = ""
 
     @classmethod
-    def init(cls, name):
+    def init(cls, name:str):
         cls.name = name if isinstance(name, str) else ""
 
     @classmethod

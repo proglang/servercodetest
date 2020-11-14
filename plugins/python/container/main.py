@@ -131,7 +131,7 @@ class Main:
         sock.send_data({"res": code, "data": data})
         sock.close()
 
-    def __init__(self, threads=20, listener_timeout=600, request_timeout=50):
+    def __init__(self, threads:int=20, listener_timeout:int=600, request_timeout:int=50):
         self._request_timout = request_timeout
 
         signal.signal(signal.SIGTERM, self.stop)
@@ -145,7 +145,7 @@ class Main:
         self._listener = Listener(self.handle_connection)
         self._listener.run()
 
-    def stop(self, signum=0, frame=None):
+    def stop(self, signum:int=0, frame=None):
         self._timeout.stop()
         self._listener.close()
         self._connections.apply(lambda con: self.send_data(con, ErrorCodes.listener_timeout))
@@ -186,5 +186,3 @@ class Main:
 
 if __name__ == "__main__":
     Main()
-    # signal.signal(signal.SIGTERM, s.kill)
-    # s.run()
