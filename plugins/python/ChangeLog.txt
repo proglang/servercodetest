@@ -1,0 +1,10 @@
+v0.0.3:
+- bugfixes:
+  - fixed hypothesis integration
+  - added testcode decorator: test_no_inject
+
+v0.0.2:
+- update to python 3.9
+
+v0.0.1:
+- initial version

@@ -3,7 +3,12 @@ Functions:
 - set_function(name)
 Decorators:
 - test
+- test_no_inject
 - check_args
+
+Dev Note:
+All decorators and functions must be imported from the file.
+=> plugin.py filter_source 
 """
 
 import itertools
@@ -12,7 +17,7 @@ def set_function(name:str):
     Hook.init(name)
 
 
-def test(points:int=0, description:str=""):
+def test(points:int=0, description:str="", inject_fn:bool=True):
     """
 Add Testfunction:
 - points: number of points if test is successful
@@ -28,7 +33,12 @@ def test_1(fn):
 def test_2(fn):
     assert True
 """
-    return Test.decorator(description, points)
+    return Test.decorator(description, points, not inject_fn)
+
+def test_no_inject(points:int=0, description:str=""):
+    """Same as test but doesn't inject function as first argument
+    """ 
+    return test(points, description, False)
 
 
 def check_args(points:int=0, description:str=""):
@@ -111,13 +121,14 @@ class Base:
         cls.registered.append((fn, description, points))
 
     @classmethod
-    def decorator(cls, description="", points=0):
+    def decorator(cls, description="", points=0, no_args=False):
         def fn_wrapper(fn):
-            cls.register(fn, description, points)
-
             def wrapper(*args, **kwargs):
-                return fn(*args, **kwargs)
-
+                if no_args:
+                    return fn()
+                else:
+                    return fn(*args, **kwargs)
+            cls.register(wrapper, description, points)
             return wrapper
 
         return fn_wrapper

@@ -93,7 +93,7 @@ class Plugin:
 
     def _write_files(self, _dir:str, data:dict):
         code = filter_source(data["code"], "def test_dummy():\n assert True")
-        test = filter_source(data["test"], "from sct_test import test, check_args, set_function")
+        test = filter_source(data["test"], "from sct_test import test, test_no_inject, check_args, set_function")
         with open(os.path.join(_dir, "sct_user.py"), "w") as file:
             file.write(code)
         with open(os.path.join(_dir, "sct_compare.py"), "w") as file:
