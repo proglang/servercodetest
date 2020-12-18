@@ -6,17 +6,19 @@
 see ServerCodeTest docu.
 
 ## Code grading
+
+You may set the FUT (*given function*) using `set_function(name:str)`. This corresponds to using injection.
+Alternatively, you may access functions submitted by the student in module user. In this case, injection is not needed.
+
 ### Decorators
 * `test(points:Union[int,float]=0, description:str="")`
   * registers the following function as a test function.
-  * injects the *given function* as first argument
+  * injects the *given function* as first argument of the test function
 * `test_no_inject(points:Union[int,float]=0, description:str="")`
   * registers the following function as a test function.
 * `check_args(points:Union[int,float]=0, description:str="")`
   * registers the following function as an argument check function.
   * will be called for each call to the *given function* and injects the arguments of the calls.
-
-*given function*: function set with `set_function(name:str)`
 
 ### Example
 **Student Code:**
@@ -50,11 +52,13 @@ def test_2(fn):
 from hypothesis import given, example
 import hypothesis.strategies as st
 
+## the variable names in the decorators `given` and `example` *must* match the parameter name of the test function.
+
 @test_no_inject(points=2, description="Test 3")
 @given(x=st.lists(st.integers()))
 @example(x=[])
-def test_3(args):
-  assert sorted(args) == user.sort(args)
+def test_3(x):
+  assert sorted(x) == user.sort(x)
 
 ##################################
 @check_args(points=1, description="CA 1")
