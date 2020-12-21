@@ -13,8 +13,17 @@ class Executor(BaseExecutor):
     def _is_debug(self):
         return self.get_settings().get("debug", False)
 
+    def _get_print_settings(self):
+        return self.get_settings().get("print", {})
+    def _get_exec_settings(self):
+        return self.get_settings().get("exec", {})
+
     def _is_print_mark(self):
-        return self.get_settings().get("print", {}).get("mark", True)
+        return self._get_print_settings().get("mark", True)
+
+    def _is_force_mark_output(self):
+        return self._get_print_settings().get("force_mark_user_output", False)
+
 
     def get_error(self):
         (code, _) = self._get_data()
@@ -57,55 +66,78 @@ class Executor(BaseExecutor):
                 txt += f" - {format.bold(x['index'])} {format.blue( x['file'])} -> {format.blue(x['func'])}({format.blue(x['line'])}): {format.red(x['code'])}\n"
         return txt
 
-    def get_text(self) -> str:
-        is_dbg = self._is_debug()
-        (code, data) = self._get_data()
-        if code != 0:
-            return None
-        ret = format.header("DEBUGMODE") if is_dbg else ""
+    def _get_run_text(self):
+        data = self._get_data()[1]
         data = data.get("exec", {})
-        # | run
+        ret = ""
         if (run := data.get("run")) :
             ret += format.section("RUN")
             if (text := run["text"]) != "":
                 ret += f"{text}\n"
             if (err := run["error"]) != "":
                 ret += f"{format.red(err)}\n"
-        # | pytest
+        return ret
+    def _get_pytest_text(self, debug):
+        data = self._get_data()[1]
+        data = data.get("exec", {})
+        ret = ""
         if (pytest := data.get("pytest")) :
             ret += format.section("PYTEST")
             if (text := pytest["text"]) != "":
                 ret += f"{text}\n"
             if (err := pytest["error"]) != "":
                 ret += f"{format.red(err)}\n"
-        # | Mark
-        if self._is_print_mark():
-            if (mark := data.get("mark")) :
-                _mark = format.section("MARK")
-                _add = False
-                if is_dbg:
-                    if (text := mark["text"]) != "":
-                        _mark += f"{text}\n"
-                        _add = True
-                    if (err := mark["error"]) != "":
-                        _mark += f"{format.red(err)}\n"
-                        _add = True
-                for key in ("success", "missed"):
-                    if key in ("missed",) and not is_dbg:
-                        continue
-                    if is_dbg:
-                        _mark += format.subsection(key.upper())
-                    for entry in mark[key]:
-                        _add = True
-                        note = entry["note"]
-                        func = entry["function"]
-                        points = entry["points"]
-                        if note != "":
-                            _mark += f"{func}: {points} => {note}\n"
-                        else:
-                            _mark += f"{func}: {points}\n"
-                if _add:
-                    ret += _mark
+        return ret
+    def _get_mark_text(self, debug):
+        data = self._get_data()[1]
+        data = data.get("exec", {})
+
+        mark = data.get("mark", None)
+        if not mark:
+            return ""
+        ret = ""
+        is_print = self._is_print_mark()
+        if not is_print:
+            return ""
+        is_force_output = self._is_force_mark_output()
+        ret = format.section("MARK")
+        _add = False
+        if debug or is_force_output:
+            if (text := mark["text"]) != "":
+                ret += f"{text}\n"
+                _add = True
+
+        if debug:
+            if (err := mark["error"]) != "":
+                ret += f"{format.red(err)}\n"
+                _add = True
+        for key in ("success", "missed"):
+            if key in ("missed",) and not debug:
+                continue
+            if debug:
+                ret += format.subsection(key.upper())
+            for entry in mark[key]:
+                _add = True
+                note = entry["note"]
+                func = entry["function"]
+                points = entry["points"]
+                if note != "":
+                    ret += f"{func}: {points} => {note}\n"
+                else:
+                    ret += f"{func}: {points}\n"
+        if _add:
+             return ret
+        return ""
+
+    def get_text(self) -> str:
+        code = self._get_data()[0]
+        if code != 0:
+            return None
+        is_dbg = self._is_debug()
+        ret = format.header("DEBUGMODE") if is_dbg else ""
+        ret += self._get_run_text()
+        ret += self._get_pytest_text(is_dbg)
+        ret += self._get_mark_text(is_dbg)
         return format.escape_ansi(ret)
 
     def get_points(self) -> float:

@@ -15,6 +15,9 @@ see ServerCodeTest docu.
 * Print Mark Result:
   * Output of Mark will be printed. 
   * If this is disabled, the resulting score will still be added in the json response.
+* Force Mark code output:
+  * Output of Mark will be printed.
+  * This may cause lots of output if test frameworks are used (e.g. hypothesis)
 * Run Pytest:
   * user code will be executed by pytest
 * Allowed usercode/mark code imports:

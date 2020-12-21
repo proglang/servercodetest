@@ -12,6 +12,7 @@ class Form(BaseSettings.Form):
     exec_run = forms.BooleanField(label="Execute Code", required=False)
     exec_mark = forms.BooleanField(label="Mark", required=False)
     print_mark = forms.BooleanField(label="Print Mark Result", required=False)
+    print_force_mark_user_output = forms.BooleanField(label="Force Mark code output", required=False)
     exec_pytest = forms.BooleanField(label="Run Pytest", required=False)
     user_import = forms.CharField(
         widget=forms.Textarea(),
@@ -48,6 +49,7 @@ class _Print(BaseSettings):
         if not isinstance(data, dict):
             data = {}
         self.mark = data.get("mark", True)
+        self.force_mark_user_output = data.get("force_mark_user_output", False)
 
 class _Sandbox(BaseSettings):
     class Entries:
@@ -132,6 +134,7 @@ class Settings(BaseSettings):
             "user_import": self.sandbox.user.to_string(),
             "test_import": self.sandbox.test.to_string(),
             "print_mark": self.print.mark,
+            "print_force_mark_user_output": self.print.force_mark_user_output
         }
         return ret
 
@@ -140,7 +143,8 @@ class Settings(BaseSettings):
         self.exec.run = data["exec_run"]
         self.exec.mark = data["exec_mark"]
         self.exec.pytest = data["exec_pytest"]
-        self.print.mark = data["print_mark"]
         self.sandbox.user = self.sandbox.user.from_string(data["user_import"])
         self.sandbox.test = self.sandbox.test.from_string(data["test_import"])
+        self.print.mark = data["print_mark"]
+        self.print.force_mark_user_output = data["print_force_mark_user_output"]
 
