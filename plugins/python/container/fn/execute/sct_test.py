@@ -105,6 +105,13 @@ class Hook:
 
 
 class Base:
+    class Entry:
+        def __init__(self, name, fn, description, points):
+            self.name = name
+            self.fn = fn
+            self.description = description
+            self.points = points
+    
     registered = None
     completed = None
 
@@ -116,9 +123,9 @@ class Base:
             cls.completed = []
 
     @classmethod
-    def register(cls, fn, description, points):
+    def register(cls, name, fn, description, points):
         cls.init()
-        cls.registered.append((fn, description, points))
+        cls.registered.append(cls.Entry(name, fn, description, points))
 
     @classmethod
     def decorator(cls, description="", points=0, no_args=False):
@@ -128,7 +135,7 @@ class Base:
                     return fn()
                 else:
                     return fn(*args, **kwargs)
-            cls.register(wrapper, description, points)
+            cls.register(fn.__name__, wrapper, description, points)
             return wrapper
 
         return fn_wrapper
@@ -139,7 +146,7 @@ class Base:
         _index = []
         for (index, entry) in enumerate(cls.registered):
             try:
-                entry[0](*args, **kwargs)
+                entry.fn(*args, **kwargs)
                 cls.completed.append(entry)
                 _index.append(index)
             except AssertionError:
@@ -154,7 +161,7 @@ class Base:
     def _serialize(cls, obj):
         if obj==None:
             return tuple()
-        return tuple( (entry[0].__name__, *entry[1:]) for entry in obj)
+        return tuple( (entry.name, entry.description, entry.points) for entry in obj)
 
     @classmethod
     def serialize(cls):
@@ -197,3 +204,23 @@ class Test(Base):
         fn = Hook.get_function(module)
         super().check(fn)
 
+if __name__=="__main__":
+    import sys
+    current = sys.modules[__name__]
+    def fn(args):
+        return 0
+    def test_fn():
+        fn(1)
+        fn(2)
+        fn(3)
+    @test(1, "test", False)
+    def t1():
+        pass
+    @check_args(2, "cha")
+    def t2(args):
+        pass
+    set_function("fn")
+    Test.check(current)
+    print(Test.serialize())
+    CheckArgs.check(current)
+    print(CheckArgs.serialize())
