@@ -5,6 +5,21 @@
 ## Response
 see ServerCodeTest docu.
 
+## Plugin Settings
+* Debug:
+  * activates more detailed output. E.g. failed tests
+* Execute Code:
+  * user code will be executed
+* Mark:
+  * test code will be executed
+* Print Mark Result:
+  * Output of Mark will be printed. 
+  * If this is disabled, the resulting score will still be added in the json response.
+* Run Pytest:
+  * user code will be executed by pytest
+* Allowed usercode/mark code imports:
+  * usable modules need to be added here
+
 ## Code grading
 
 You may set the FUT (*given function*) using `set_function(name:str)`. This corresponds to using injection.

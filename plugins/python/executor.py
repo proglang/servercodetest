@@ -13,6 +13,9 @@ class Executor(BaseExecutor):
     def _is_debug(self):
         return self.get_settings().get("debug", False)
 
+    def _is_print_mark(self):
+        return self.get_settings().get("print", {}).get("mark", True)
+
     def get_error(self):
         (code, _) = self._get_data()
         if code == 0:
@@ -76,32 +79,33 @@ class Executor(BaseExecutor):
             if (err := pytest["error"]) != "":
                 ret += f"{format.red(err)}\n"
         # | Mark
-        if (mark := data.get("mark")) :
-            _mark = format.section("MARK")
-            _add = False
-            if is_dbg:
-                if (text := mark["text"]) != "":
-                    _mark += f"{text}\n"
-                    _add = True
-                if (err := mark["error"]) != "":
-                    _mark += f"{format.red(err)}\n"
-                    _add = True
-            for key in ("success", "missed"):
-                if key in ("missed",) and not is_dbg:
-                    continue
+        if self._is_print_mark():
+            if (mark := data.get("mark")) :
+                _mark = format.section("MARK")
+                _add = False
                 if is_dbg:
-                    _mark += format.subsection(key.upper())
-                for entry in mark[key]:
-                    _add = True
-                    note = entry["note"]
-                    func = entry["function"]
-                    points = entry["points"]
-                    if note != "":
-                        _mark += f"{func}: {points} => {note}\n"
-                    else:
-                        _mark += f"{func}: {points}\n"
-            if _add:
-                ret += _mark
+                    if (text := mark["text"]) != "":
+                        _mark += f"{text}\n"
+                        _add = True
+                    if (err := mark["error"]) != "":
+                        _mark += f"{format.red(err)}\n"
+                        _add = True
+                for key in ("success", "missed"):
+                    if key in ("missed",) and not is_dbg:
+                        continue
+                    if is_dbg:
+                        _mark += format.subsection(key.upper())
+                    for entry in mark[key]:
+                        _add = True
+                        note = entry["note"]
+                        func = entry["function"]
+                        points = entry["points"]
+                        if note != "":
+                            _mark += f"{func}: {points} => {note}\n"
+                        else:
+                            _mark += f"{func}: {points}\n"
+                if _add:
+                    ret += _mark
         return format.escape_ansi(ret)
 
     def get_points(self) -> float:

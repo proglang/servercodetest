@@ -11,6 +11,7 @@ class Form(BaseSettings.Form):
     debug = forms.BooleanField(label="Debug", required=False)
     exec_run = forms.BooleanField(label="Execute Code", required=False)
     exec_mark = forms.BooleanField(label="Mark", required=False)
+    print_mark = forms.BooleanField(label="Print Mark Result", required=False)
     exec_pytest = forms.BooleanField(label="Run Pytest", required=False)
     user_import = forms.CharField(
         widget=forms.Textarea(),
@@ -42,6 +43,11 @@ class _Exec(BaseSettings):
         self.mark = data.get("mark", False)
         self.pytest = data.get("pytest", False)
 
+class _Print(BaseSettings):
+    def __init__(self, data: dict = {}):
+        if not isinstance(data, dict):
+            data = {}
+        self.mark = data.get("mark", True)
 
 class _Sandbox(BaseSettings):
     class Entries:
@@ -115,6 +121,7 @@ class Settings(BaseSettings):
         self.debug = data.get("debug", False)
         self.sandbox = _Sandbox(data.get("sandbox", {}))
         self.exec = _Exec(data.get("exec", {}))
+        self.print = _Print(data.get("print", {}))
 
     def get_form_data(self):
         ret = {
@@ -124,6 +131,7 @@ class Settings(BaseSettings):
             "exec_pytest": self.exec.pytest,
             "user_import": self.sandbox.user.to_string(),
             "test_import": self.sandbox.test.to_string(),
+            "print_mark": self.print.mark,
         }
         return ret
 
@@ -132,6 +140,7 @@ class Settings(BaseSettings):
         self.exec.run = data["exec_run"]
         self.exec.mark = data["exec_mark"]
         self.exec.pytest = data["exec_pytest"]
+        self.print.mark = data["print_mark"]
         self.sandbox.user = self.sandbox.user.from_string(data["user_import"])
         self.sandbox.test = self.sandbox.test.from_string(data["test_import"])
 
