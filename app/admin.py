@@ -345,7 +345,11 @@ class DockerAdmin(admin.ModelAdmin):
             start = self.create_button(value % "start", _("action.start"), startable)
             stop = self.create_button(value % "stop", _("action.stop"), not running)
             delete = self.create_button(value % "delete", _("action.delete"), running)
-            return start + stop + delete
+            btns = start + stop + delete
+            if self.container:
+                logs = self.create_button(value % "logs", _("action.logs"), False)
+                return btns + logs
+            return btns
 
     # https://gist.github.com/hakib/ec462baef03a6146654e4c095142b5eb
     def changelist_view(self, request, *args, **kwargs):
@@ -353,11 +357,15 @@ class DockerAdmin(admin.ModelAdmin):
             if "docker_action" in request.POST:
                 try:
                     (action, typ, id) = re.match(
-                        "(start|stop|delete) (c|i) (.+)", request.POST["docker_action"]
+                        r"(start|stop|delete|logs) (c|i) ([a-zA-Z0-9-_]+)", request.POST["docker_action"]
                     ).groups()
                     typ = docker.Container if typ == "c" else docker.Image
                     instance = typ(ident=id)
-                    getattr(instance, action)()
+                    res = getattr(instance, action)()
+                    if action=="logs" and res:
+                        response = django.http.HttpResponse(res, content_type='application/text')
+                        response['Content-Disposition'] = f'attachment; filename={id}.log'
+                        return response
                     self.message_user(
                         request, self._messages[0].get(action, "{}").format(id)
                     )
@@ -369,8 +377,7 @@ class DockerAdmin(admin.ModelAdmin):
                         level=messages.ERROR,
                         extra_tags="safe",
                     )
-                finally:
-                    return redirect(request.build_absolute_uri())
+                return redirect(request.build_absolute_uri())
             response = super().changelist_view(request, *args, **kwargs)
 
             # get containerlist

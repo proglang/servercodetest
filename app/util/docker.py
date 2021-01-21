@@ -242,3 +242,10 @@ class Container:
             if data:
                 return data.status == self.State.RUNNING
             return False
+
+    def logs(self) -> str:
+        with logging.LogCall(__file__, "logs", self.__class__):
+            container = self.exists()
+            if not container:
+                return None
+            return container.logs(tail=1000)
