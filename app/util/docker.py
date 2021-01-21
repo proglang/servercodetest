@@ -53,7 +53,14 @@ class _Container:
     @classmethod
     def start(cls, name: str) -> ContainerType:
         cnt = cls.get(name)
-        cnt.start()
+        networks = cnt.attrs.get("NetworkSettings", {}).get("Networks", {})
+        for network in networks:
+            n = _Docker.get().networks.get(network)
+            n.disconnect(cnt)
+        cnt.start()          
+        for network in networks:
+            n = _Docker.get().networks.get(network)
+            n.connect(cnt)
         return cnt
 
     @classmethod
