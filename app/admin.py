@@ -209,7 +209,8 @@ class SettingForm(django.forms.ModelForm):
         exclude = []
 
     class Media:
-        js = ("pluginLoader.js", "https://code.jquery.com/jquery-3.4.1.min.js")
+        js = ("pluginLoader.js", "helper.js", "https://code.jquery.com/jquery-3.4.1.min.js")
+        css = { "all":("custom.css",)}
 
 
 @admin.register(Setting)
@@ -222,10 +223,14 @@ class SettingAdmin(admin.ModelAdmin):
     )
     list_display = ("name", "token", "plugin", "date")
     list_filter = ("name", "plugin", "date")
+    change_form_template = 'plugin.setting.change_view.html'
 
-    def changeform_view(self, *args, **kwargs):
+    def changeform_view(self, request: WSGIRequest, object_id=None, form_url='', extra_context=None):
         Plugin.clear()  # remove deleted plugins from table
-        return super().changeform_view(*args, **kwargs)
+        if object_id != None:
+            print(object_id)
+            extra_context = {"setting_id":object_id}
+        return super().changeform_view(request, object_id, form_url, extra_context)
 
     def formfield_for_foreignkey(self, db_field, *args, **kwargs):
         if db_field.name == "plugin":
@@ -240,7 +245,7 @@ class SettingAdmin(admin.ModelAdmin):
             django.urls.path(
                 "form/<uuid:settings>/<slug:plugin>/",
                 admin.site.admin_view(self.get_plugin_form),
-            ),
+            ),                
         ]
         return my_urls + urls
 

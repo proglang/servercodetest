@@ -1,0 +1,70 @@
+{% extends "admin/change_form.html" %}
+{% block content %}
+{{ block.super }}
+{% if setting_id %}
+<br class="clear">
+<script>
+    async function test_send(btn, id) {
+        const path = "{% url 'index' %}"+id;
+        btn.style.backgroundColor = 'yellow';
+        const response = await fetch(path, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "code":$("#user_code").val(),
+                "test":$("#test_code").val(),
+            })
+        });
+        const output = $("#output");
+        output.html("");
+        try {
+            const result = await response.json();
+            btn.style.backgroundColor = '';
+            
+            if (typeof(response.status)==="number") {
+                output.append($("<p></p>").text("HTTP-Status: " + response.status));
+            }
+            if (typeof(result.points)==="number") {
+                output.append($("<p></p>").text("Points: "+ result.points));
+            }
+            if (result.error) {
+                const error_content = $("<div class='sct_error'></div>");
+                if (result.error.key) {
+                    const content = $("<p></p>").text(result.error.key);
+                    error_content.append(content);
+                }
+                if (result.error.text) {
+                    const content = $("<p></p>").html(escape(result.error.text).replaceAll("\n", "<br>"));
+                    error_content.append(content);
+                }
+                output.append(error_content);
+            }
+            if (result.text) {
+                const content = $("<div></div>").html(escape(result.text).replaceAll("\n", "<br>"));
+                output.append(content);
+            }
+        } catch (e) {
+            btn.style.backgroundColor = 'red';
+            output.append("<p></p>").text(await response.text());
+        }
+    }
+</script>
+<div class="module aligned" id="Test">
+    <h2> Test: </h2>
+    <div class="form-row field-settings">
+        <textarea type="text" name="user_code" id="user_code"></textarea>
+    </div>
+    <div class="form-row field-settings">
+        <textarea type="text" name="test_code" id="test_code"></textarea>
+    </div>
+    <div class="submit-row">
+        <button class="default" onclick="test_send(this, '{{ setting_id }}')">Submit</button>
+    </div>
+    <div id="output">
+        {{ result }}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
