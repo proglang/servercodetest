@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-10 06:43+0100\n"
+"POT-Creation-Date: 2021-01-21 17:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,169 +18,168 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\admin.py:36 .\admin.py:269
+#: app/admin.py:82 app/admin.py:310
 msgid "title.name"
 msgstr "Name"
 
-#: .\admin.py:37
+#: app/admin.py:83
 msgid "title.version"
 msgstr "Version"
 
-#: .\admin.py:38 .\admin.py:271
+#: app/admin.py:84 app/admin.py:312
 msgid "title.state"
 msgstr "State"
 
-#: .\admin.py:39
+#: app/admin.py:85
 msgid "title.active"
 msgstr "Active"
 
-#: .\admin.py:40 .\admin.py:274
+#: app/admin.py:86 app/admin.py:314
 msgid "title.actions"
 msgstr "Actions"
 
-#: .\admin.py:64
+#: app/admin.py:109
 msgid "action.load"
 msgstr "Load"
 
-#: .\admin.py:66
+#: app/admin.py:111
 msgid "action.reload"
 msgstr "Reload"
 
-#: .\admin.py:68
+#: app/admin.py:113
 msgid "action.disable"
 msgstr "Disable"
 
-#: .\admin.py:70
+#: app/admin.py:115
 msgid "action.enable"
 msgstr "Enable"
 
-#: .\admin.py:91
+#: app/admin.py:120
 msgid "plugin.message.load"
 msgstr "{} loaded"
 
-#: .\admin.py:92
+#: app/admin.py:121
 msgid "plugin.message.reload"
 msgstr "{} loaded"
 
-#: .\admin.py:93
+#: app/admin.py:122
 msgid "plugin.message.disable"
 msgstr "{} disabled"
 
-#: .\admin.py:94
+#: app/admin.py:123
 msgid "plugin.message.enable"
 msgstr "{} enabled"
 
-#: .\admin.py:97
+#: app/admin.py:126
 msgid "plugin.error.load"
 msgstr "error loading {}"
 
-#: .\admin.py:98
+#: app/admin.py:127
 msgid "plugin.error.reload"
 msgstr "error loading {}"
 
-#: .\admin.py:99
+#: app/admin.py:128
 msgid "plugin.error.disable"
 msgstr "could not disable {}"
 
-#: .\admin.py:100
+#: app/admin.py:129
 msgid "plugin.error.enable"
 msgstr "could not enable {}"
 
-#: .\admin.py:187
+#: app/admin.py:221
 msgid "general"
 msgstr "General"
 
-#: .\admin.py:188
+#: app/admin.py:222
 msgid "readonly"
 msgstr ""
 
-#: .\admin.py:222
+#: app/admin.py:264
 msgid "plugin.settings"
 msgstr "Settings"
 
-#: .\admin.py:257
+#: app/admin.py:297
 msgid "docker.message.delete"
 msgstr "{} deleted"
 
-#: .\admin.py:258
+#: app/admin.py:298
 msgid "docker.message.start"
 msgstr "{} started"
 
-#: .\admin.py:259
+#: app/admin.py:299
 msgid "docker.message.stop"
 msgstr "{} stopped"
 
-#: .\admin.py:262
+#: app/admin.py:302
 msgid "docker.error.delete"
 msgstr "could not delete {}"
 
-#: .\admin.py:263
+#: app/admin.py:303
 msgid "docker.error.start"
 msgstr "could not start {}"
 
-#: .\admin.py:264
+#: app/admin.py:304
 msgid "docker.error.stop"
 msgstr "could not stop {}"
 
-#: .\admin.py:270
+#: app/admin.py:311
 msgid "title.docker.image"
 msgstr "Image"
 
-#: .\admin.py:272
+#: app/admin.py:313
 msgid "title.docker.container"
 msgstr "Container"
 
-#: .\admin.py:273
-msgid "title.date"
-msgstr "Date"
-
-#: .\admin.py:298
+#: app/admin.py:345
 msgid "action.start"
 msgstr "Start"
 
-#: .\admin.py:299
+#: app/admin.py:346
 msgid "action.stop"
 msgstr "Stop"
 
-#: .\admin.py:300
+#: app/admin.py:347
 msgid "action.delete"
 msgstr "Delete"
 
-#: .\models.py:13
+#: app/admin.py:350
+msgid "action.logs"
+msgstr "Logs"
+
+#: app/models.py:13
 msgid "plugin"
 msgstr "Plugin"
 
-#: .\models.py:14
+#: app/models.py:14
 msgid "plugins"
 msgstr "Plugins"
 
-#: .\models.py:60
+#: app/models.py:64
 msgid "setting"
 msgstr "Setting"
 
-#: .\models.py:61
+#: app/models.py:65
 msgid "settings"
 msgstr "Settings"
 
-#: .\models.py:63
+#: app/models.py:68
 msgid "plugin.name"
 msgstr "Name"
 
-#: .\models.py:66
+#: app/models.py:71
 msgid "setting.name"
 msgstr "Name"
 
-#: .\models.py:68 .\models.py:85
+#: app/models.py:73
 msgid "date"
 msgstr "Date"
 
-#: .\models.py:72
+#: app/models.py:76
 msgid "setting.token"
 msgstr "Token"
 
-#: .\models.py:83
-msgid "lock.name"
-msgstr ""
+#~ msgid "title.date"
+#~ msgstr "Date"
 
 #~ msgid "test"
 #~ msgstr "english_name"
