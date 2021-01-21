@@ -357,7 +357,7 @@ class DockerAdmin(admin.ModelAdmin):
             if "docker_action" in request.POST:
                 try:
                     (action, typ, id) = re.match(
-                        r"(start|stop|delete|logs) (c|i) ([a-zA-Z0-9-_]+)", request.POST["docker_action"]
+                        r"(start|stop|delete|logs) (c|i) ([a-zA-Z0-9-_:.]+)", request.POST["docker_action"]
                     ).groups()
                     typ = docker.Container if typ == "c" else docker.Image
                     instance = typ(ident=id)
