@@ -30,6 +30,7 @@ class Timeout:
     def __init__(self, callback, wait=60):
         self.exit = Event()
         self.timeout = 0
+        self.set_time = False
         self.wait = wait
         self.lock = multiprocessing.Lock()
         self.callback = callback
@@ -37,7 +38,21 @@ class Timeout:
 
     def reset(self):
         with self.lock:
-            self.timeout = time.time() + self.wait
+            self.timeout = time.time()
+
+    def set_timeout_duration(self, val):
+        _type = type(val)
+        if _type!=int and _type != float:
+            return False
+        if val <= 0:
+            return True
+        # upper / lower bound for timeout
+        val = min(max(val, 5), 1*60*60) # 1 hour max (in seconds)
+        with self.lock:
+            self.set_time = True
+            self.wait = val
+            self.exit.set()
+        return True
 
     def stop(self):
         self.exit.set()
@@ -49,14 +64,20 @@ class Timeout:
         thread.start()
 
     def __call__(self):
-        while not self.exit.is_set():
+        while True:
             _time = 0
             current = time.time()
             with self.lock:
-                _time = self.timeout
+                _time = self.timeout + self.wait
             if _time <= current:
                 break
             self.exit.wait(_time - current)
+            with self.lock:
+                if self.set_time:
+                    self.set_time = False
+                    self.exit.clear()
+                if self.exit.is_set():
+                    break
         self.callback()
 
 
@@ -154,28 +175,48 @@ class Main:
 
     def handle_connection(self, sock: SCTSock):
         self._pool.apply_async(self._handle_connection_thread, [sock])
+    
+    def _set_request_timeout(self, val):
+        # don't call this function without locking self._lock first!
+        _type = type(val)
+        if _type!=int and _type != float:
+            return False
+        if val <= 0:
+            return True
+        # upper / lower bound for timeout
+        val = min(max(val, 5), 60) # 60 seconds max
+        self._request_timout = val
+        return True
 
     def _handle_connection_thread(self, sock: SCTSock):
         try:
             with ConnectionsWrapper(sock, self._connections):
                 self._timeout.reset()
+                timeout = None
                 with self._lock:
                     version = sock.recv().payload
                     if not self._plugin.checkVersion(version):
                         sock.send_init("init")
                         data = sock.recv().payload
                         self._plugin.setSettings(version, data)
+                        self._timeout.set_timeout_duration(data.get("main", {}).get("container_timeout", None))
+                        self._set_request_timeout(data.get("main", {}).get("code_timeout", None))
+                        logging.debug("Settings: %s", str(data))
+                    timeout = self._request_timout
+                if timeout==None:
+                    raise ValueError("timeout must be set!")
+    
                 sock.send_init("data")
                 con_pool = multiprocessing.pool.ThreadPool(1)
                 data = sock.recv().payload
-                result = con_pool.apply_async(self._plugin.exec, [data]).get(
-                    self._request_timout
-                )
+                result = con_pool.apply_async(self._plugin.exec, [data]).get( timeout )
                 con_pool.close()
                 self.send_data(sock, ErrorCodes.none, result)
         except multiprocessing.TimeoutError:
+            logging.debug("A timeout occurred while executing user code")
             self.send_data(sock, ErrorCodes.execution_timeout)
         except TooManyConnectionsError:
+            logging.info("Too many connections: Maybe increase threadcount.")
             self.send_data(sock, ErrorCodes.too_many_connections)
         except Exception as e:
             traceback = get_traceback(e)
