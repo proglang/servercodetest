@@ -3,6 +3,7 @@ import struct
 import json
 import time
 import os, sys, signal
+import logging
 
 # pylint: disable=import-error
 from sctsock import SCTSock, create_socket
@@ -179,10 +180,13 @@ class Main:
         except Exception as e:
             traceback = get_traceback(e)
             self.send_data(sock, ErrorCodes.exception, traceback)
-            print(traceback)
+            logging.error(str(traceback))
         finally:
             sock.close()
 
 
 if __name__ == "__main__":
+    logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', level=logging.DEBUG)
+    logging.info("Startup")
     Main()
+    logging.info("Shutdown")

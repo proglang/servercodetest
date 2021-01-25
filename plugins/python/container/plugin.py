@@ -1,6 +1,6 @@
 # pylint: disable=import-error
 from sctsock import SCTSock
-
+import logging
 # pylint: enable=import-error
 
 import os
@@ -72,7 +72,7 @@ class Plugin:
         return self.version == version
 
     def setSettings(self, version, settings):
-        print("SetSettings:", version)
+        logging.info("SetSettings: %s", str(version))
         self.version = version
         self.settings.reset(settings)
 
@@ -103,7 +103,11 @@ class Plugin:
         with tempfile.TemporaryDirectory(prefix="tmp_", dir=os.getcwd()) as _dir:
             self._add_links(_dir)
             self._write_files(_dir, data)
-
-            _radon = run_radon(_dir, self.settings)
-            _exec = run_execute(_dir, self.settings)
-        return {"radon": _radon, "exec": _exec, "version": self.version}
+            try:
+                _radon = run_radon(_dir, self.settings)
+                _exec = run_execute(_dir, self.settings)
+                return {"radon": _radon, "exec": _exec, "version": self.version}
+            except Exception as e:
+                logging.error("Error1 (%s) executing code: '%s'", str(e), data.get("code", ""))
+                logging.error("Error2 (%s) executing code: '%s'", str(e), data.get("test", ""))
+                raise
