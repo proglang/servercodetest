@@ -34,6 +34,13 @@ Ambiguities won't be resolved.
         widget=forms.Textarea(), label="Allowed mark code imports", max_length=2048, required=False,
         help_text=format_help_text("test_import","allowed imports for mark code.\nFormat as in usercode.")
     )
+    main_container_timeout_duration = forms.IntegerField(label="Container Timeout", required=False,
+        help_text=format_help_text("main_container_timeout_duration", "duration in seconds until container shuts down after last request")
+    )
+    main_code_timeout_duration = forms.IntegerField(label="Code Timeout", required=False,
+        help_text=format_help_text("main_code_timeout_duration", "duration in seconds until user code execution is interrupted")
+    )
+    
 
 
 class _Exec(BaseSettings):
@@ -113,6 +120,13 @@ class _Sandbox(BaseSettings):
         self.user = self.Entries(data.get("user", []))
         self.test = self.Entries(data.get("test", []))
 
+class _Main(BaseSettings):
+    def __init__(self, data: dict = {}):
+        if not isinstance(data, dict):
+            data = {}
+        self.container_timeout = data.get("container_timeout", None)
+        self.code_timeout = data.get("code_timeout", None)
+
 
 class Settings(BaseSettings):
     Form = Form
@@ -124,6 +138,7 @@ class Settings(BaseSettings):
         self.sandbox = _Sandbox(data.get("sandbox", {}))
         self.exec = _Exec(data.get("exec", {}))
         self.print = _Print(data.get("print", {}))
+        self.main = _Main(data.get("main", {}))
 
     def get_form_data(self):
         ret = {
@@ -134,7 +149,9 @@ class Settings(BaseSettings):
             "user_import": self.sandbox.user.to_string(),
             "test_import": self.sandbox.test.to_string(),
             "print_mark": self.print.mark,
-            "print_force_mark_user_output": self.print.force_mark_user_output
+            "print_force_mark_user_output": self.print.force_mark_user_output,
+            "main_container_timeout_duration": self.main.container_timeout,
+            "main_code_timeout_duration":self.main.code_timeout
         }
         return ret
 
@@ -147,4 +164,6 @@ class Settings(BaseSettings):
         self.sandbox.test = self.sandbox.test.from_string(data["test_import"])
         self.print.mark = data["print_mark"]
         self.print.force_mark_user_output = data["print_force_mark_user_output"]
+        self.main.container_timeout = data.get("main_container_timeout_duration", None)
+        self.main.code_timeout = data.get("main_code_timeout_duration", None)
 

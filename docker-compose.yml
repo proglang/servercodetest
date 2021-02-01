@@ -30,7 +30,7 @@ services:
       - GU_SUPERUSER=root
       - GU_SUPERUSER_PASSWORD=test
       - GU_PROCESSES=2
-      - GU_THREADS=2
+      - GU_THREADS=20
       - GU_USER_ID=0
 
   db:
